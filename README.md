@@ -3,7 +3,7 @@
 Point Claude Code at your home network and it cleans every TV it finds:
 
 - **Android TV / Google TV:** debloat with tested per-model lists, a calm ad-free home screen, faster animations.
-- **Amazon Fire TV:** debloat, privacy menus, autoplay off, ad-blocking Private DNS, a tidier Amazon home.
+- **Amazon Fire TV:** debloat, privacy menus, autoplay off, ad-blocking Private DNS, and a clean launcher in front of Amazon's home that hides its ad banner and "Sponsored" row.
 - **Samsung Tizen:** pairs as a network remote and walks the privacy and Smart Hub menus for you (ACR, ad
   tracking, diagnostics, autorun), plus HDMI-first boot.
 - **The whole home:** ad-blocking DNS on the router, and a check that catches computers and browsers that bypass it.
@@ -42,6 +42,7 @@ Claude scans the network, tells you the one thing you have to do with the remote
 | `scripts/android_ui.sh` | Key presses + screenshot, for menus the shell cannot reach |
 | `scripts/samsung_remote.py` | Samsung pairing, keys, menu macros, app list/launch |
 | `scripts/dns_check.sh` | Is ad-blocking DNS really in effect on this computer? |
+| `scripts/fire_launcher.sh` | Clean launcher in front of Amazon's Fire TV home (hides the ad banner) |
 | `scripts/fetch_upstream.sh` | Clones/updates CleanYourTV and TV Detox |
 
 ## Safety

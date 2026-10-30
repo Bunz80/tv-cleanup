@@ -1,0 +1,63 @@
+diff --git a/launcher/app/src/main/java/com/gathin/tvhome/HomeKeyService.java b/launcher/app/src/main/java/com/gathin/tvhome/HomeKeyService.java
+index 5f0c136..a8487b3 100644
+--- a/launcher/app/src/main/java/com/gathin/tvhome/HomeKeyService.java
++++ b/launcher/app/src/main/java/com/gathin/tvhome/HomeKeyService.java
+@@ -321,7 +321,57 @@ public class HomeKeyService extends AccessibilityService {
+         }
+         // stock_home_redirect: the firmware turned the stock launcher back on and its home screen came up.
+         CharSequence cls = event.getClassName();
+-        if (!stockHome.isEmpty() && cls != null && stockHome.contains(cls.toString())) openHome();
++        if (!stockHome.isEmpty() && cls != null && stockHome.contains(cls.toString())) {
++            if (FIRE_OS) showCover();
++            openHome();
++        } else if (cover != null && coverEnds(event.getPackageName(), cls)) {
++            hideCover();
++        }
++    }
++
++    /** Fire OS keeps Home for Amazon's launcher, and after a Home press Android holds every other activity start
++     *  for about five seconds (app switch protection), so the stock home and its ads stay on screen until this
++     *  launcher may start. A plain accessibility overlay covers it at once and goes when any other window comes up. */
++    static final boolean FIRE_OS = "Amazon".equalsIgnoreCase(Build.MANUFACTURER);
++    private static final long COVER_MAX_MS = 8000L;
++    private android.view.View cover;
++
++    private void showCover() {
++        if (cover != null) return;
++        android.view.WindowManager wm = (android.view.WindowManager) getSystemService(WINDOW_SERVICE);
++        android.view.WindowManager.LayoutParams lp = new android.view.WindowManager.LayoutParams(
++                android.view.WindowManager.LayoutParams.MATCH_PARENT,
++                android.view.WindowManager.LayoutParams.MATCH_PARENT,
++                android.view.WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY,
++                android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
++                        | android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
++                        | android.view.WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
++                        | android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN,
++                android.graphics.PixelFormat.OPAQUE);
++        android.view.View v = new android.view.View(this);
++        v.setBackgroundColor(0xFF0B0F1A);
++        try {
++            wm.addView(v, lp);
++            cover = v;
++            handler.postDelayed(this::hideCover, COVER_MAX_MS);
++        } catch (RuntimeException ignored) {
++        }
++    }
++
++    /** This launcher's own activity, or another app's: not the stock home, the cover itself or a system panel. */
++    private boolean coverEnds(CharSequence pkg, CharSequence cls) {
++        if (pkg == null || stockHomePackage.contentEquals(pkg) || "com.android.systemui".contentEquals(pkg)) return false;
++        if (getPackageName().contentEquals(pkg)) return cls != null && cls.toString().endsWith("MainActivity");
++        return true;
++    }
++
++    private void hideCover() {
++        if (cover == null) return;
++        try {
++            ((android.view.WindowManager) getSystemService(WINDOW_SERVICE)).removeView(cover);
++        } catch (RuntimeException ignored) {
++        }
++        cover = null;
+     }
+ 
+     /** How long power_on_home stays armed after the screen turns on without a reboot. */

@@ -29,6 +29,9 @@ for the device before acting.
 - **Close the door at the end:** ADB off on Android/Fire (`settings put global adb_enabled 0`), and tell the
   user how to remove the network-remote pairing on Samsung.
 - Reply in the user's language.
+- **Uninstall only what the user names, and re-read the name.** Before `pm uninstall`, map the user's word to
+  the package and its on-screen label (an IPTV app can show as "SKTV" on its banner and "LuckyApp" in the list)
+  and save the APK first: `adb shell pm path <pkg>` → `adb pull` (sideloaded apps often have no store to come back from).
 
 ## 1. Discover
 
@@ -135,7 +138,8 @@ Settings: put back the old values from the notes (`settings put global ...`). DN
   the path as a macro.
 - **You cannot see a Samsung screen** (no screenshot API). Keep the user in the loop for verification, or
   prefer settings that are idempotent to send.
-- **Fire OS keeps Home.** No third-party launcher can take the Home button; improve Amazon's home instead.
+- **Fire OS keeps Home, but you can put a clean launcher in front of it** (`scripts/fire_launcher.sh`, see
+  fire-tv.md §8): the only way to hide the hero banner and the "Sponsored" row, which DNS cannot block.
 - **Fire OS 8: leave animation scales at 1.0** (0.5 breaks the side menu). Fire OS 7: 0.5 is fine and helps.
 - **A client with hard-coded DNS bypasses the router** (seen: macOS Wi-Fi DNS set to 8.8.8.8). Always run
   `scripts/dns_check.sh` on the computer you are using, and check browsers for "Secure DNS"/DoH.

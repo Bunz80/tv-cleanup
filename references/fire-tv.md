@@ -1,7 +1,9 @@
 # Amazon Fire TV (Fire OS 5–8)
 
-Debloat works; **Home cannot be replaced** (Fire OS ignores a third-party HOME filter and refuses to disable
-`com.amazon.tv.launcher`). So: clean, de-track, speed up, block ads by DNS, and tidy Amazon's own home.
+Debloat works. Amazon's launcher cannot be disabled or replaced as the HOME role (Fire OS ignores a third-party
+HOME filter and refuses to disable `com.amazon.tv.launcher`), and its hero banner and "Sponsored" row are drawn
+by that launcher, so neither DNS nor debloat removes them. What does work is **sending Amazon's home to a clean
+launcher** (section 8): clean, de-track, speed up, block ads by DNS, then put the clean launcher in front.
 
 ## 1. Identify
 
@@ -112,3 +114,34 @@ adb shell settings put global adb_enabled 0   # last: closes 5555
 ```
 
 Undo: `TV_HOST=<ip> tools/restore.sh examples/<list>/debloat.txt com.amazon.tv.launcher`.
+
+## 8. Clean launcher in front of Amazon's home (removes the hero banner and "Sponsored" row)
+
+Verified 2026-10-30 on a Fire TV Stick Lite (AFTSS, Fire OS 7.7.1.7 / Android 9), through a reboot.
+
+How it works: CleanYourTV's launcher is installed as a normal app; its accessibility service `HomeKeyService`
+with `stock_home_redirect = com.amazon.tv.launcher` sees Amazon's `HomeActivity_vNext` window come up and opens
+the clean launcher. After a Home press Android holds other activity starts for ~5 s (app switch protection), so
+Amazon's home would stay visible that long: `patches/fire-home-cover.patch` adds a plain full-screen accessibility
+overlay on Fire OS that covers it at once and goes as soon as the clean launcher (or any app) is in front.
+Upstream keeps "Fire TV Home takeover" out of its repo by policy, so the patch lives here.
+
+```bash
+# theme: copy one (glass works well), then set the redirect and the user's apps
+cp -R ~/.cache/tv-cleanup/cleanyourtv/themes/glass ~/.config/tv-cleanup/themes/fire-clean
+# edit config.json: "stock_home_redirect": "com.amazon.tv.launcher", "restore_key_services": true,
+#   "dock_apps": ["com.amazon.firebat", "com.amazon.firetv.youtube", ...]   (installed packages only)
+scripts/fire_launcher.sh <stick ip> ~/.config/tv-cleanup/themes/fire-clean
+```
+
+Fire TV package names for `dock_apps`: Prime Video `com.amazon.firebat`, YouTube `com.amazon.firetv.youtube`,
+Netflix `com.netflix.ninja`, RaiPlay `it.rainet.androidtv`, HBO Max `com.hbo.hbonow`, Disney+ `com.disney.disneyplus`.
+Change the dock later by editing the theme and re-running `tools/theme.sh`.
+
+Check: from an app, Home → within ~1.5 s a dark screen (no Amazon home), then the clean launcher
+(`dumpsys activity activities | grep mResumedActivity` → `com.gathin.tvhome/.MainActivity`), and the same after a
+reboot. Limits: the long-press Home menu and Amazon's Settings still work (open Settings from the launcher's gear);
+an Amazon update can stop the redirect, and then the stock home simply comes back.
+
+Undo: `adb shell settings put secure enabled_accessibility_services '""'` (stock home back at once), and
+`adb uninstall com.gathin.tvhome` to remove the launcher.
