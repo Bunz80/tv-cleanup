@@ -70,6 +70,11 @@ Look at every screenshot before the next line; adapt when the focus is not where
 - **Fire OS 8: leave them at 1.0** (0.5 breaks the ☰ side menu).
 - `pm trim-caches 999G`; force-stop heavy apps left in the background (`dumpsys meminfo` → Total PSS by process).
 - Report `MemAvailable` before/after from `/proc/meminfo`.
+- **Routine tune-up:** `scripts/speed.sh <ip>` (cache files of every app, background apps stopped, memory
+  trimmed; logins and settings untouched). Seen on a Stick Lite: 285 → 358 MB free. `--deep` also recompiles apps
+  for speed after big updates. The clean launcher costs ~70 MB; a theme without wallpaper and effects
+  (`wallpaper`, `advanced_effects`, `app_glow`, `dock_glass` false) is the lightest; the Fire OS cover overlay
+  exists only for the ~5 s after Home and costs nothing otherwise.
 
 ## 5. Ads
 
