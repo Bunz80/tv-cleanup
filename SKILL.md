@@ -78,7 +78,9 @@ was already done. One section per device:
 
 Update it after every change (date, what, how to undo). Devices get new IPs from DHCP: match by MAC.
 When the user is watching a device ("my daughter is watching"), do not send keys or reboot it: work on
-another device or wait, and say so.
+another device or wait, and say so. **Before every batch of keys or app launches, check what is in front**
+(`dumpsys activity activities | grep -m1 mResumedActivity`): if it is a player or a streaming app, someone may be
+watching — stop and ask, even if the user said to go ahead earlier.
 
 ## 2. Fetch the upstream tools (once per session)
 

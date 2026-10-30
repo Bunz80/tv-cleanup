@@ -150,3 +150,14 @@ an Amazon update can stop the redirect, and then the stock home simply comes bac
 
 Undo: `adb shell settings put secure enabled_accessibility_services '""'` (stock home back at once), and
 `adb uninstall com.gathin.tvhome` to remove the launcher.
+
+## 9. Turbo button (one press frees RAM)
+
+`apps/turbo/` is a tiny app (no network, one normal permission, KILL_BACKGROUND_PROCESSES): opened from the
+launcher it stops every app's background processes and shows the free RAM, then closes. It does not clear caches
+(Android reserves that for system apps): use `scripts/speed.sh` for caches.
+
+```bash
+apps/turbo/build.sh && adb install -r apps/turbo/out/turbo.apk
+# add "com.tvcleanup.turbo" to the theme's dock_apps and push the theme again
+```

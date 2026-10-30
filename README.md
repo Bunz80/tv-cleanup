@@ -44,6 +44,7 @@ Claude scans the network, tells you the one thing you have to do with the remote
 | `scripts/dns_check.sh` | Is ad-blocking DNS really in effect on this computer? |
 | `scripts/fire_launcher.sh` | Clean launcher in front of Amazon's Fire TV home (hides the ad banner) |
 | `scripts/speed.sh` | Quick tune-up: app caches, background apps, memory (any Android/Fire TV) |
+| `apps/turbo/` | "Turbo" tile for the launcher: one press frees RAM on the TV |
 | `scripts/fetch_upstream.sh` | Clones/updates CleanYourTV and TV Detox |
 
 ## Safety
