@@ -86,6 +86,14 @@ What the user can still shape on Fire OS:
 - **Your apps row:** long-press Home → Apps (or the apps tile) → select an app → Menu (☰) → **Move to front**
   / **Move**; apps outside the first row are hidden from Home. Do this with `android_ui.sh` and screenshots:
   put the user's daily apps first, push utilities (Downloader, VPN, NetGuard) to the end.
+
+  Verified walk (Fire OS 7, IT): `adb shell input keyevent --longpress HOME` → quick menu → `DPAD_RIGHT DPAD_CENTER`
+  opens "Applicazioni e giochi". The first row (6 tiles) is what Home shows. Read tile names and positions with
+  `adb shell uiautomator dump /sdcard/u.xml && adb shell cat /sdcard/u.xml | grep -o 'text="[^"]*riga[^"]*"'`
+  ("Netflix riga 1 colonna 6"). On a tile: `MENU` → options *Sposta, Sposta in primo piano, Maggiori informazioni,
+  Rimozione, Disinstalla* → `DPAD_DOWN DPAD_CENTER` = move to front, and focus returns to row 1 col 1.
+  Move to front in **reverse** of the wanted order (6th app first, 1st app last). Never press OK on the 4th/5th
+  option (remove / uninstall).
 - Notifications: Settings → Applications → Appstore → Notifications OFF; Settings → Preferences → Notification
   Settings → Do Not Disturb / per-app OFF for promo apps.
 - Featured content autoplay OFF (above).
