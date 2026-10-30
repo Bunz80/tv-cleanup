@@ -19,7 +19,7 @@ control, DNS across the house, and lessons from real runs.
 ## Install
 
 ```bash
-git clone https://github.com/<you>/tv-cleanup ~/.claude/skills/tv-cleanup
+git clone https://github.com/Bunz80/tv-cleanup ~/.claude/skills/tv-cleanup
 ```
 
 Requirements: `adb` (Android platform-tools), Python 3.10+, `git`; for Samsung, `pip install websocket-client`.

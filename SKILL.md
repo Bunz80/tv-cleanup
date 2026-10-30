@@ -60,6 +60,23 @@ Turning ADB on (only the user can do it, with the physical remote):
 `scripts/wait_adb.sh [ip]` waits (default 30 min) until the device is authorised, so you can start it in the
 background and carry on as soon as it reports `AUTHORIZED`, without the user having to tell you.
 
+## 1b. Home inventory (every device, every run)
+
+Keep one file per home: `~/.config/tv-cleanup/home.md`. Read it first; it is how the next session knows what
+was already done. One section per device:
+
+```markdown
+## Tv Salotto — Samsung UE50AU7172 (Tizen 2021) — 192.168.1.170 — MAC 04:b9:e3:…
+- Paired as network remote: yes (token in samsung-<ip>.token)
+- Done: ACR off, interest ads off (2026-10-29)
+- To do: Smart Hub autorun off
+- Notes: Anynet+ forwards keys to the Fire Stick when the menu closes
+```
+
+Update it after every change (date, what, how to undo). Devices get new IPs from DHCP: match by MAC.
+When the user is watching a device ("my daughter is watching"), do not send keys or reboot it: work on
+another device or wait, and say so.
+
 ## 2. Fetch the upstream tools (once per session)
 
 ```bash
