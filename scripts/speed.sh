@@ -14,7 +14,8 @@ mem() { adb shell grep MemAvailable /proc/meminfo | awk '{printf "%d MB", $2/102
 disk() { adb shell df -h /data | tail -1 | awk '{print $4" free of "$2}'; }
 echo "before: RAM free $(mem), storage $(disk)"
 
-FRONT=$(adb shell dumpsys activity activities | grep -m1 mResumedActivity | grep -oE '[a-z][a-z0-9_.]+/' | tr -d '/')
+# Android 9 (Fire OS 7) prints "ResumedActivity:", newer versions "mResumedActivity" / "topResumedActivity".
+FRONT=$(adb shell dumpsys activity activities | grep -m1 -E 'ResumedActivity' | grep -oE '[a-z][a-z0-9_.]+/' | tr -d '/' || true)
 echo "in front (left alone): ${FRONT:-unknown}"
 
 # Cache files of every app (Android deletes cache dirs until this much is free; data and logins stay).

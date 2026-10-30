@@ -108,14 +108,18 @@ def apps(ip: str) -> None:
     try:
         ws.send(json.dumps({"method": "ms.channel.emit", "params": {
             "event": "ed.installedApp.get", "to": "host"}}))
+        ws.settimeout(3)
         end = time.time() + 8
         while time.time() < end:
-            msg = json.loads(ws.recv())
+            try:
+                msg = json.loads(ws.recv())
+            except Exception:
+                continue
             if msg.get("event") == "ed.installedApp.get":
                 for a in msg["data"]["data"]:
                     print(f"{a.get('appId'):30} {a.get('name')}")
                 return
-        print("no app list returned (some firmwares do not answer ed.installedApp.get)")
+        print("no app list returned (newer firmwares only answer ed.installedApp.get on the plain 8001 channel)")
     finally:
         ws.close()
 
